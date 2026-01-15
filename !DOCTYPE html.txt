@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tier 2 Loan DSAT Analysis Report</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .card {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+        }
+        .sentiment-bar {
+            height: 8px;
+            border-radius: 4px;
+        }
+        .quote-box {
+            border-left: 4px solid #3b82f6;
+            background-color: #eff6ff;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- Navigation / Header -->
+    <nav class="bg-slate-900 text-white p-6 shadow-lg">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight">DSAT Analysis Report</h1>
+                <p class="text-slate-400 text-sm">Tier 2 Loans: PDL & Dana Cicil</p>
+            </div>
+            <div class="text-right hidden sm:block">
+                <p class="text-sm font-semibold">Report Date</p>
+                <p class="text-xs text-slate-400">January 15, 2026</p>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto p-6 space-y-8">
+
+        <!-- Executive Summary Cards -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Total Feedback -->
+            <div class="card p-6 border-l-4 border-blue-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm text-gray-500 font-semibold uppercase">Total Feedback Processed</p>
+                        <h2 class="text-4xl font-bold mt-2">1,954</h2>
+                    </div>
+                    <div class="p-3 bg-blue-100 rounded-full text-blue-600">
+                        <i class="fa-solid fa-comments"></i>
+                    </div>
+                </div>
+                <p class="mt-4 text-sm text-gray-600">Across PDL, Dana Cicil & Dana Flexi</p>
+            </div>
+
+            <!-- Negative Sentiment -->
+            <div class="card p-6 border-l-4 border-red-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm text-gray-500 font-semibold uppercase">Negative Rate</p>
+                        <h2 class="text-4xl font-bold mt-2 text-red-600">62.4%</h2>
+                    </div>
+                    <div class="p-3 bg-red-100 rounded-full text-red-600">
+                        <i class="fa-solid fa-thumbs-down"></i>
+                    </div>
+                </div>
+                <p class="mt-4 text-sm text-gray-600">Combined "Unsatisfied" & "Very Unsatisfied"</p>
+            </div>
+
+            <!-- Top Pain Point -->
+            <div class="card p-6 border-l-4 border-orange-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm text-gray-500 font-semibold uppercase">Top Pain Point</p>
+                        <h2 class="text-2xl font-bold mt-2 text-orange-600">Payment Processing</h2>
+                    </div>
+                    <div class="p-3 bg-orange-100 rounded-full text-orange-600">
+                        <i class="fa-solid fa-credit-card"></i>
+                    </div>
+                </div>
+                <p class="mt-4 text-sm text-gray-600">Users pay, but system doesn't update, leading to fines.</p>
+            </div>
+        </section>
+
+        <!-- Charts Section -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <!-- Top Issues Chart -->
+            <div class="card p-6">
+                <h3 class="text-lg font-bold mb-4 text-slate-800">Top 5 Drivers of Dissatisfaction (Volume)</h3>
+                <div class="relative h-64 w-full">
+                    <canvas id="topIssuesChart"></canvas>
+                </div>
+                <p class="text-xs text-gray-500 mt-4 text-center">Payment issues dominate both PDL and Dana Cicil product lines.</p>
+            </div>
+
+            <!-- Category Performance -->
+            <div class="card p-6">
+                <h3 class="text-lg font-bold mb-4 text-slate-800">Dissatisfaction Rate by Product</h3>
+                <div class="relative h-64 w-full">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+                <p class="text-xs text-gray-500 mt-4 text-center">PDL products show the highest friction, with >60% negative feedback rate.</p>
+            </div>
+        </section>
+
+        <!-- Deep Dive: Qualitative Analysis -->
+        <section class="card p-8">
+            <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+                <i class="fa-solid fa-magnifying-glass-chart text-blue-600"></i> Qualitative Analysis: The "Payment Paradox"
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h4 class="font-semibold text-lg text-slate-700 mb-3">The Core Issue</h4>
+                    <p class="text-gray-600 leading-relaxed mb-4">
+                        The most critical finding is the correlation between <strong>Payment Failures</strong> and <strong>Collection Complaints</strong>.
+                    </p>
+                    <ul class="space-y-3">
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-exclamation text-red-500 mt-1"></i>
+                            <span class="text-sm text-gray-700"><strong>System Latency:</strong> Users report transferring funds ("sudah tf") but the app does not reflect the payment ("tidak terpotong").</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-exclamation text-red-500 mt-1"></i>
+                            <span class="text-sm text-gray-700"><strong>Unfair Fines:</strong> Because the system doesn't register the payment instantly, the account hits "Jatuh Tempo" (Due Date), automatically triggering fines.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-exclamation text-red-500 mt-1"></i>
+                            <span class="text-sm text-gray-700"><strong>Vicious Cycle:</strong> Users are then unable to re-apply for loans because their history shows "Late Payment," despite having paid on time.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-slate-50 rounded-lg p-4">
+                    <h4 class="font-semibold text-sm text-slate-500 uppercase mb-3">Voice of Customer</h4>
+                    
+                    <div class="space-y-4">
+                        <div class="quote-box p-4 rounded text-sm italic text-gray-700">
+                            "kmrn saya sudah tf tapi tidak terpotong. mengakibatkan keterlambatan dan denda. sampai skrng tidak bisa pinjam lagi"
+                            <div class="text-xs text-gray-500 not-italic mt-2 text-right">- Feedback ID 44625969</div>
+                        </div>
+
+                        <div class="quote-box p-4 rounded text-sm italic text-gray-700 border-l-4 border-orange-500 !bg-orange-50">
+                            "2 kali terakhir saya gak jatuh tempo....tapi ngajuin pinjaman lagi gak lolos alasan telat pembayaran"
+                            <div class="text-xs text-gray-500 not-italic mt-2 text-right">- Feedback ID 46537182</div>
+                        </div>
+
+                        <div class="quote-box p-4 rounded text-sm italic text-gray-700 border-l-4 border-red-500 !bg-red-50">
+                            "Saran nya untuk lebih jelas lagi rules nya harus lebih jelas dan cepat"
+                            <div class="text-xs text-gray-500 not-italic mt-2 text-right">- Feedback ID 49993709</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Secondary Insights Grid -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Fraud Alert -->
+            <div class="card p-6 border-t-4 border-red-600">
+                <h3 class="text-lg font-bold text-red-700 mb-2"><i class="fa-solid fa-shield-halved"></i> Critical Risk: Fraud</h3>
+                <p class="text-sm text-gray-600 mb-4">Although lower in volume (approx. 4% of tickets), Fraud & Account Takeover issues have the highest intensity of negative sentiment.</p>
+                <div class="bg-red-50 p-3 rounded border border-red-100">
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="text-xs font-bold text-red-800">"Very Unsatisfied" Rate</span>
+                        <span class="text-xs font-bold text-red-800">82%</span>
+                    </div>
+                    <div class="w-full bg-red-200 rounded-full h-2">
+                        <div class="bg-red-600 h-2 rounded-full" style="width: 82%"></div>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 mt-3">High urgency. These users are at risk of churning permanently and damaging brand reputation publicly.</p>
+            </div>
+
+            <!-- Service Speed -->
+            <div class="card p-6 border-t-4 border-blue-600">
+                <h3 class="text-lg font-bold text-blue-700 mb-2"><i class="fa-solid fa-stopwatch"></i> Speed & Disbursement</h3>
+                <p class="text-sm text-gray-600 mb-4">Mixed feedback regarding speed. While some praise "Fast Response," others face delays in verification and disbursement.</p>
+                
+                <div class="flex gap-2 flex-wrap">
+                    <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold">Positive: "Respon Cepat"</span>
+                    <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-semibold">Negative: "Pencairan Lama"</span>
+                    <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-semibold">Negative: "Verifikasi Ditolak"</span>
+                </div>
+                <p class="text-xs text-gray-500 mt-3">30% of comments specifically mention "Cepat" (Fast) or "Lama" (Slow/Long), indicating speed is a primary value driver.</p>
+            </div>
+        </section>
+
+        <!-- Recommendations -->
+        <section class="card p-8 bg-slate-800 text-white">
+            <h3 class="text-xl font-bold mb-6">Strategic Recommendations</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="flex gap-4">
+                    <div class="flex-shrink-0 w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center font-bold">1</div>
+                    <div>
+                        <h4 class="font-bold text-lg mb-2">Fix the "Payment-to-Fine" Loop</h4>
+                        <p class="text-slate-300 text-sm">Investigate the latency between payment gateways and the core ledger. Implement a 24-hour "Grace Period" for technical reconciliation before auto-triggering fines or blocking new loans.</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-4">
+                    <div class="flex-shrink-0 w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center font-bold">2</div>
+                    <div>
+                        <h4 class="font-bold text-lg mb-2">Proactive "Due Date" Alerts</h4>
+                        <p class="text-slate-300 text-sm">Users complain about forgetting or missing the cut-off. Implement aggressive Push/WA notifications 2 days and 2 hours before "Jatuh Tempo" to reduce accidental delinquency.</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-4">
+                    <div class="flex-shrink-0 w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center font-bold">3</div>
+                    <div>
+                        <h4 class="font-bold text-lg mb-2">Streamline Fine Waivers</h4>
+                        <p class="text-slate-300 text-sm">Since "Diskon Denda" is a top 3 ticket driver, automate this process. If a user provides proof of payment transfer during the technical delay, auto-waive the fine without human agent intervention.</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-4">
+                    <div class="flex-shrink-0 w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center font-bold">4</div>
+                    <div>
+                        <h4 class="font-bold text-lg mb-2">Fraud "Fast Lane"</h4>
+                        <p class="text-slate-300 text-sm">Isolate tickets tagged as "Account Takeover" or "Fraud" and route them to a specialized Tier 2 team immediately. The high dissatisfaction rate here requires white-glove service.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="text-center text-gray-400 text-sm mt-8 pb-8">
+            <p>Generated based on Tier 2 Loan DSAT Data • Confidential Internal Report</p>
+        </footer>
+
+    </main>
+
+    <!-- Chart Scripts -->
+    <script>
+        // Data derived from the Python Analysis
+        
+        // Chart 1: Top Issues (Volume of Negative Feedback)
+        const ctxIssues = document.getElementById('topIssuesChart').getContext('2d');
+        new Chart(ctxIssues, {
+            type: 'bar',
+            data: {
+                labels: ['PDL Payment', 'Dana Cicil Payment', 'PDL Fine/Discount', 'Dana Cicil Fine/Discount', 'PDL Disbursement Delay'],
+                datasets: [{
+                    label: 'Negative Feedback Volume',
+                    data: [247, 132, 66, 67, 60],
+                    backgroundColor: [
+                        'rgba(239, 68, 68, 0.8)', // Red
+                        'rgba(249, 115, 22, 0.8)', // Orange
+                        'rgba(234, 179, 8, 0.8)', // Yellow
+                        'rgba(59, 130, 246, 0.8)', // Blue
+                        'rgba(168, 85, 247, 0.8)'  // Purple
+                    ],
+                    borderColor: [
+                        'rgba(239, 68, 68, 1)',
+                        'rgba(249, 115, 22, 1)',
+                        'rgba(234, 179, 8, 1)',
+                        'rgba(59, 130, 246, 1)',
+                        'rgba(168, 85, 247, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y', // Horizontal Bar Chart
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // Chart 2: Category Performance (Negative Rate)
+        const ctxCategory = document.getElementById('categoryChart').getContext('2d');
+        new Chart(ctxCategory, {
+            type: 'bar',
+            data: {
+                labels: ['PDL (KTA Asetku)', 'Dana Flexi', 'PDL', 'Dana Cicil', 'Refund'],
+                datasets: [{
+                    label: 'Negative Rate (%)',
+                    data: [90, 68, 62, 58, 16],
+                    backgroundColor: [
+                        'rgba(220, 38, 38, 0.9)', // Dark Red
+                        'rgba(239, 68, 68, 0.8)', // Red
+                        'rgba(249, 115, 22, 0.8)', // Orange
+                        'rgba(251, 146, 60, 0.8)', // Light Orange
+                        'rgba(34, 197, 94, 0.8)'   // Green
+                    ],
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.raw + '% Dissatisfied';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            callback: function(value) {
+                                return value + "%"
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
